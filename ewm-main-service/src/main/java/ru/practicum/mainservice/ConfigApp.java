@@ -1,3 +1,4 @@
+/*
 package ru.practicum.mainservice;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -19,3 +20,4 @@ public class ConfigApp {
 }
 
 
+*/
