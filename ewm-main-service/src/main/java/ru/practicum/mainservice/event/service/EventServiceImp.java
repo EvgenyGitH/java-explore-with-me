@@ -163,7 +163,7 @@ public class EventServiceImp implements EventService {
         }
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
                 new NotFoundException("Event with id=" + eventId + " is not found."));
-        if (event.getInitiator().getId() != userId) {
+        if (!event.getInitiator().getId().equals(userId)) {
             throw new ValidationException("Only Initiator can get Event's Request.");
         }
         return requestRepository.findAllByEventId(eventId).stream()

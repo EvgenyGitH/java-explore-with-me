@@ -51,14 +51,14 @@ public class RequestServiceImp implements RequestService {
                     + eventId + " already exists");
         }
 
-        if (userId == event.getInitiator().getId()) {
+        if (userId.equals(event.getInitiator().getId())) {
             throw new DataConflictException("Event Initiator cannot create a request to participate in the event");
         }
         if (!event.getState().equals(State.PUBLISHED)) {
             throw new DataConflictException("Request can only be directed to published events");
         }
         Long confirmedRequests = requestRepository.countRequestByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
-        if (event.getParticipantLimit() != 0 && confirmedRequests == event.getParticipantLimit()) {
+        if (event.getParticipantLimit() != 0 && confirmedRequests.equals(event.getParticipantLimit())) {
             throw new DataConflictException("Limit " + event.getParticipantLimit() + " of participants has been exceeded");
         }
 
@@ -82,13 +82,12 @@ public class RequestServiceImp implements RequestService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id=" + userId + " is not found.");
         }
-        if (request.getRequester().getId() != userId) {
+        if (!request.getRequester().getId().equals(userId)) {
             throw new DataConflictException("Request can only be canceled by the Requester");
         }
         request.setStatus(RequestStatus.CANCELED);
         requestRepository.save(request);
         return RequestMapper.toParticipationRequestDto(request);
     }
-
 
 }
