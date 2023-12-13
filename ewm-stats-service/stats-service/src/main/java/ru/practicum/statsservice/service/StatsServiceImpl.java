@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.stereotype.Service;
 import ru.practicum.statsdto.EndpointHitDto;
 import ru.practicum.statsdto.ViewStats;
+import ru.practicum.statsservice.exceprion.ValidationException;
 import ru.practicum.statsservice.mapper.StatsMapper;
 import ru.practicum.statsservice.model.EndpointHit;
 import ru.practicum.statsservice.repository.StatsRepository;
@@ -25,7 +26,9 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-
+        if (start.isAfter(end)) {
+            throw new ValidationException("Not correct dates");
+        }
         if (unique) {
             if (uris == null) {
                 return statsRepository.getStatsByUniqueIp(start, end);
@@ -40,6 +43,5 @@ public class StatsServiceImpl implements StatsService {
             }
         }
     }
-
 
 }
