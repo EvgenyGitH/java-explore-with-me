@@ -244,7 +244,6 @@ public class EventServiceImp implements EventService {
         if (categories != null && categories.isEmpty()) {
             categories = null;
         }
-        
         List<Event> events = eventRepository.findAllByAdmin(usersIds, states, categories, rangeStart, rangeEnd, pageable);
         Map<String, Long> stats = getViews(events);
         for (Event event : events) {
@@ -252,7 +251,6 @@ public class EventServiceImp implements EventService {
             Long views = stats.getOrDefault("/events/" + event.getId(), 0L);
             event.setViews(views);
         }
-
         List<EventFullDto> eventFullDtoList = events.stream()
                 .map(EventMapper::toEventFullDto)
                 .collect(Collectors.toList());
