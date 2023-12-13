@@ -1,3 +1,4 @@
+/*
 package ru.practicum.statsclient;
 
 import org.springframework.boot.SpringApplication;
@@ -9,3 +10,4 @@ public class StatsClientApp {
         SpringApplication.run(StatsClientApp.class, args);
     }
 }
+*/
