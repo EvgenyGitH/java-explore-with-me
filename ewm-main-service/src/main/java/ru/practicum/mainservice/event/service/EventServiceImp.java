@@ -235,6 +235,16 @@ public class EventServiceImp implements EventService {
         if (rangeStart.isAfter(rangeEnd)) {
             throw new ValidationException("Not correct dates");
         }
+        if (usersIds != null && usersIds.isEmpty()) {
+            usersIds = null;
+        }
+        if (states != null && states.isEmpty()) {
+            states = null;
+        }
+        if (categories != null && categories.isEmpty()) {
+            categories = null;
+        }
+        
         List<Event> events = eventRepository.findAllByAdmin(usersIds, states, categories, rangeStart, rangeEnd, pageable);
         Map<String, Long> stats = getViews(events);
         for (Event event : events) {
@@ -334,6 +344,9 @@ public class EventServiceImp implements EventService {
 
         Pageable pageable = PageRequest.of(from / size, size);
 
+        if (text.isBlank()) {
+            text = null;
+        }
         if (categories != null && categories.isEmpty()) {
             categories = null;
         }
