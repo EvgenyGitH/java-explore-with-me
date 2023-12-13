@@ -342,9 +342,6 @@ public class EventServiceImp implements EventService {
 
         Pageable pageable = PageRequest.of(from / size, size);
 
-        if (text.isBlank()) {
-            text = null;
-        }
         if (categories != null && categories.isEmpty()) {
             categories = null;
         }
