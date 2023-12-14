@@ -1,6 +1,6 @@
 package ru.practicum.mainservice.user.controller;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@Data
+@RequiredArgsConstructor
 @Validated
 @RequestMapping("/admin/users")
 public class AdminUserController {

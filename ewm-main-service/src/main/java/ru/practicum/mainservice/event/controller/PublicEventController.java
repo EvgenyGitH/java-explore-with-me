@@ -1,6 +1,6 @@
 package ru.practicum.mainservice.event.controller;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@Data
+@RequiredArgsConstructor
 @Slf4j
 @Validated
 @RequestMapping("/events")

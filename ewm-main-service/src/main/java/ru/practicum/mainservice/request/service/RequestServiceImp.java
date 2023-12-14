@@ -1,6 +1,6 @@
 package ru.practicum.mainservice.request.service;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainservice.event.model.Event;
@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Data
-
+@RequiredArgsConstructor
 public class RequestServiceImp implements RequestService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
@@ -76,6 +75,7 @@ public class RequestServiceImp implements RequestService {
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
         ParticipationRequest request = requestRepository.findById(requestId).orElseThrow(() ->
                 new NotFoundException("Request with id=" + requestId + " is not found."));

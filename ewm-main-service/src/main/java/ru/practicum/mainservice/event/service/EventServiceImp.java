@@ -2,9 +2,7 @@ package ru.practicum.mainservice.event.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -40,10 +38,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Data
+
 @Service
 @RequiredArgsConstructor
-
 public class EventServiceImp implements EventService {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final String DEFAULT_END = "2050-01-01 00:00:00";
@@ -53,8 +50,6 @@ public class EventServiceImp implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final RequestRepository requestRepository;
-
-    @Autowired
     private final StatsClient statsClient;
 
 
@@ -69,6 +64,7 @@ public class EventServiceImp implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto createEvent(Long userId, NewEventDto newEventDto) {
         if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new ValidationException(
@@ -96,6 +92,7 @@ public class EventServiceImp implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id=" + userId + " is not found.");
@@ -172,6 +169,7 @@ public class EventServiceImp implements EventService {
     }
 
     @Override
+    @Transactional
     public EventRequestStatusUpdateResult updateRequestStatusToEvent(Long userId, Long eventId, EventRequestStatusUpdateRequest request) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id=" + userId + " is not found.");

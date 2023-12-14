@@ -1,6 +1,6 @@
 package ru.practicum.mainservice.category.controller;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -12,7 +12,7 @@ import ru.practicum.mainservice.category.service.CategoryService;
 import javax.validation.Valid;
 
 @RestController
-@Data
+@RequiredArgsConstructor
 @Validated
 @Slf4j
 @RequestMapping("/admin/categories")

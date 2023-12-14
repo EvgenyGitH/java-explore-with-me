@@ -1,6 +1,6 @@
 package ru.practicum.mainservice.event.controller;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +15,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
-@Data
+@RequiredArgsConstructor
 @Slf4j
 @Validated
 @RequestMapping("/users/{userId}/events")

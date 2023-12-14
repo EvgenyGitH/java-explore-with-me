@@ -1,7 +1,6 @@
 package ru.practicum.mainservice.compilation.controller;
 
-
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +13,7 @@ import ru.practicum.mainservice.compilation.service.CompilationService;
 import javax.validation.Valid;
 
 @RestController
-@Data
+@RequiredArgsConstructor
 @Slf4j
 @Validated
 @RequestMapping("/admin/compilations")

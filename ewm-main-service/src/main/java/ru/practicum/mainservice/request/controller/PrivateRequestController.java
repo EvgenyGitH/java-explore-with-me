@@ -1,6 +1,6 @@
 package ru.practicum.mainservice.request.controller;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -11,7 +11,7 @@ import ru.practicum.mainservice.request.service.RequestService;
 import java.util.List;
 
 @RestController
-@Data
+@RequiredArgsConstructor
 @Slf4j
 @Validated
 @RequestMapping("/users/{userId}/requests")
