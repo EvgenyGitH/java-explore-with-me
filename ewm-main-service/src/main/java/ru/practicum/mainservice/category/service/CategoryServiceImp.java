@@ -29,12 +29,11 @@ public class CategoryServiceImp implements CategoryService {
     @Transactional
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
         Category categoryToSave = CategoryMapper.newToCategory(newCategoryDto);
-
         Category category;
         try {
             category = categoryRepository.save(categoryToSave);
         } catch (DataIntegrityViolationException exception) {
-            throw new DataConflictException("Category name should be unique.");
+            throw new DataConflictException(exception.getMessage());
         }
 
         return CategoryMapper.toCategoryDto(category);
@@ -63,7 +62,7 @@ public class CategoryServiceImp implements CategoryService {
             category = categoryRepository.save(savedCategory);
             categoryRepository.flush();
         } catch (DataIntegrityViolationException exception) {
-            throw new DataConflictException("Category name should be unique.");
+            throw new DataConflictException(exception.getMessage());
         }
         return CategoryMapper.toCategoryDto(category);
     }

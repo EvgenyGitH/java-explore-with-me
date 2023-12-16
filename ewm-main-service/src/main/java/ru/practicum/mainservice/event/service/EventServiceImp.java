@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainservice.category.model.Category;
 import ru.practicum.mainservice.category.repository.CategoryRepository;
+import ru.practicum.mainservice.comment.mapper.CommentMapper;
+import ru.practicum.mainservice.comment.model.Comment;
+import ru.practicum.mainservice.comment.repository.CommentRepository;
 import ru.practicum.mainservice.event.dto.*;
 import ru.practicum.mainservice.event.mapper.EventMapper;
 import ru.practicum.mainservice.event.model.Event;
@@ -43,6 +46,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventServiceImp implements EventService {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String DEFAULT_START = "1980-01-01 00:00:00";
     private static final String DEFAULT_END = "2050-01-01 00:00:00";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final EventRepository eventRepository;
@@ -50,6 +54,7 @@ public class EventServiceImp implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final RequestRepository requestRepository;
+    private final CommentRepository commentRepository;
     private final StatsClient statsClient;
 
 
@@ -68,7 +73,7 @@ public class EventServiceImp implements EventService {
     public EventFullDto createEvent(Long userId, NewEventDto newEventDto) {
         if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new ValidationException(
-                    "Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + newEventDto.getEventDate());
+                    "Field: eventDate. Error: Time of the event cannot be earlier than 2 hours from the current moment. Value: " + newEventDto.getEventDate());
         }
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("User with id=" + userId + " is not found."));
@@ -77,7 +82,7 @@ public class EventServiceImp implements EventService {
         Location location = locationRepository.save(newEventDto.getLocation());
         Event event = EventMapper.toEvent(newEventDto, category, user, location);
         event = eventRepository.save(event);
-        return EventMapper.toEventFullDto(event);
+        return EventMapper.toEventFullDto(event, new ArrayList<>());
 
     }
 
@@ -88,7 +93,8 @@ public class EventServiceImp implements EventService {
         }
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
                 new NotFoundException("Event with id=" + eventId + " is not found."));
-        return EventMapper.toEventFullDto(event);
+
+        return EventMapper.toEventFullDto(event, CommentMapper.toDtoList(commentRepository.findAllByEventId(event.getId())));
     }
 
     @Override
@@ -150,7 +156,7 @@ public class EventServiceImp implements EventService {
         }
 
         event = eventRepository.save(event);
-        return EventMapper.toEventFullDto(event);
+        return EventMapper.toEventFullDto(event, CommentMapper.toDtoList(commentRepository.findAllByEventId(event.getId())));
     }
 
     @Override
@@ -249,10 +255,13 @@ public class EventServiceImp implements EventService {
             Long views = stats.getOrDefault("/events/" + event.getId(), 0L);
             event.setViews(views);
         }
-        List<EventFullDto> eventFullDtoList = events.stream()
-                .map(EventMapper::toEventFullDto)
+        List<Long> eventIds = events.stream().map(Event::getId).collect(Collectors.toList());
+        Map<Long, List<Comment>> comments = commentRepository.findAllByEventIdIn(eventIds).stream()
+                .collect(Collectors.groupingBy(comment -> comment.getEvent().getId()));
+        return events.stream()
+                .map(event -> EventMapper.toEventFullDto(event, CommentMapper.toDtoList(comments.getOrDefault(event.getId(), new ArrayList<>()))))
                 .collect(Collectors.toList());
-        return eventFullDtoList;
+
     }
 
     @Override
@@ -320,7 +329,7 @@ public class EventServiceImp implements EventService {
             event.setTitle(updateEventAdminRequest.getTitle());
         }
 
-        return EventMapper.toEventFullDto(eventRepository.save(event));
+        return EventMapper.toEventFullDto(eventRepository.save(event), CommentMapper.toDtoList(commentRepository.findAllByEventId(event.getId())));
 
     }
 
@@ -352,7 +361,6 @@ public class EventServiceImp implements EventService {
         if (rangeStart.isAfter(rangeEnd)) {
             throw new ValidationException("Not correct dates");
         }
-
         List<Event> events = eventRepository.findAllByPublic(text, categories, paid, rangeStart, rangeEnd, pageable);
         Map<String, Long> stats = getViews(events);
         for (Event event : events) {
@@ -405,11 +413,11 @@ public class EventServiceImp implements EventService {
         event.setConfirmedRequests(requestRepository.countRequestByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED));
         Long views = stats.getOrDefault("/events/" + event.getId(), 0L);
         event.setViews(views);
-        return EventMapper.toEventFullDto(event);
+        return EventMapper.toEventFullDto(event, CommentMapper.toDtoList(commentRepository.findAllByEventId(event.getId())));
     }
 
     private Map<String, Long> getViews(List<Event> events) {
-        LocalDateTime start = LocalDateTime.parse("1980-01-01 00:00:00", formatter);
+        LocalDateTime start = LocalDateTime.parse(DEFAULT_START, formatter);
         LocalDateTime end = LocalDateTime.now();
 
         List<String> uris = events.stream()

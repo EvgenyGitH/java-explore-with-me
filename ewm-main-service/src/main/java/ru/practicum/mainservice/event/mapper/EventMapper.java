@@ -2,6 +2,7 @@ package ru.practicum.mainservice.event.mapper;
 
 import ru.practicum.mainservice.category.mapper.CategoryMapper;
 import ru.practicum.mainservice.category.model.Category;
+import ru.practicum.mainservice.comment.dto.CommentDto;
 import ru.practicum.mainservice.event.dto.EventFullDto;
 import ru.practicum.mainservice.event.dto.EventShortDto;
 import ru.practicum.mainservice.event.dto.NewEventDto;
@@ -12,6 +13,7 @@ import ru.practicum.mainservice.user.mapper.UserMapper;
 import ru.practicum.mainservice.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class EventMapper {
     public static EventShortDto toEventShortDto(Event event) {
@@ -45,7 +47,7 @@ public class EventMapper {
         return event;
     }
 
-    public static EventFullDto toEventFullDto(Event event) {
+    public static EventFullDto toEventFullDto(Event event, List<CommentDto> comments) {
         EventFullDto eventFullDto = new EventFullDto();
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
@@ -63,6 +65,7 @@ public class EventMapper {
         eventFullDto.setState(event.getState());
         eventFullDto.setTitle(event.getTitle());
         eventFullDto.setViews(event.getViews());
+        eventFullDto.setComments(comments);
         return eventFullDto;
     }
 
