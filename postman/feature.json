@@ -389,7 +389,7 @@
 							"pm.test(\"Test event 'id' field\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData).to.have.property('id');\r",
-							"    pm.expect(jsonData.id, '\"id\" must be 103').to.eql(103);\r",
+							"    pm.expect(jsonData.id, '\"id\" must be 106').to.eql(106);\r",
 							"});\r",
 							"pm.test(\"Test event 'title' field\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
@@ -434,7 +434,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "103"
+							"value": "106"
 						}
 					]
 				}
