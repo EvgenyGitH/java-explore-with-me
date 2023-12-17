@@ -65,7 +65,7 @@ public class PrivateEventController {
     public EventRequestStatusUpdateResult updateRequestStatusToEvent(@PathVariable Long userId,
                                                                      @PathVariable Long eventId,
                                                                      @RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
-        log.debug("Вызван метод patchRequests");
+        log.info("request Private: update Request");
         return eventService.updateRequestStatusToEvent(userId, eventId, eventRequestStatusUpdateRequest);
     }
 

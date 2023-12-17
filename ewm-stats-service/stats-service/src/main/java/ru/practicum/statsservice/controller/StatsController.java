@@ -1,6 +1,6 @@
 package ru.practicum.statsservice.controller;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @Slf4j
-@Data
 @Validated
 public class StatsController {
     private final StatsService statsService;
@@ -33,7 +33,6 @@ public class StatsController {
                                     @RequestParam(required = false) List<String> uris,
                                     @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("get Hit's statistic");
-
         return statsService.getStats(start, end, uris, unique);
     }
 
