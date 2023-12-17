@@ -31,8 +31,8 @@ public class CommentMapper {
         return commentDto;
     }
 
-    public static List<CommentDto> toDtoList (List<Comment>comments){
-        if(comments.isEmpty()){
+    public static List<CommentDto> toDtoList(List<Comment> comments) {
+        if (comments.isEmpty()) {
             return new ArrayList<>();
         }
         return comments.stream()

@@ -12,6 +12,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByAuthorId(Long userId, Pageable pageable);
 
     List<Comment> findAllByEventId(Long eventId);
+
     List<Comment> findAllByEventIdIn(List<Long> eventIds);
 
     @Query("select com " +
@@ -25,6 +26,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                                  LocalDateTime rangeStart,
                                  LocalDateTime rangeEnd,
                                  Pageable pageable);
-
 
 }
